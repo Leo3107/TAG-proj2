@@ -31,32 +31,78 @@ def load_input(path: str) -> Tuple[Dict[str, Project], Dict[int, Student]]:
     with open(path, 'r', encoding='utf-8') as f:
         for raw in f:
             line = raw.strip()
-            if not line or line.startswith('#'):
+            if not line or line.startswith('#') or line.startswith('//'):
                 continue
-            parts = [p.strip() for p in line.split(';')]
-            tag = parts[0].upper()
-            if tag == 'PROJECT':
-                if len(parts) < 4:
-                    raise ValueError(f"Invalid PROJECT line: {line}")
-                code = parts[1]
-                vacancies = int(parts[2])
-                min_req = int(parts[3])
-                if vacancies < 1:
-                    raise ValueError(f"Project {code} must have at least 1 vacancy")
-                projects[code] = Project(code, vacancies, min_req)
-            elif tag == 'STUDENT':
-                if len(parts) < 3:
-                    raise ValueError(f"Invalid STUDENT line: {line}")
-                sid = int(parts[1])
-                score = int(parts[2])
-                if score not in (3,4,5):
-                    raise ValueError(f"Student {sid} score must be 3/4/5")
-                prefs: List[str] = []
-                if len(parts) >= 4 and parts[3]:
-                    prefs = [p.strip() for p in parts[3].split(',') if p.strip()]
-                students[sid] = Student(sid, prefs, score)
-            else:
-                raise ValueError(f"Unknown line tag: {parts[0]}")
+            # Support tuple-like formats too
+            if line.upper().startswith('PROJECT') or line.upper().startswith('STUDENT'):
+                parts = [p.strip() for p in line.split(';')]
+                tag = parts[0].upper()
+                if tag == 'PROJECT':
+                    if len(parts) < 4:
+                        raise ValueError(f"Invalid PROJECT line: {line}")
+                    code = parts[1]
+                    vacancies = int(parts[2])
+                    min_req = int(parts[3])
+                    if vacancies < 1:
+                        raise ValueError(f"Project {code} must have at least 1 vacancy")
+                    projects[code] = Project(code, vacancies, min_req)
+                elif tag == 'STUDENT':
+                    if len(parts) < 3:
+                        raise ValueError(f"Invalid STUDENT line: {line}")
+                    sid = int(parts[1])
+                    score = int(parts[2])
+                    if score not in (3,4,5):
+                        raise ValueError(f"Student {sid} score must be 3/4/5")
+                    prefs: List[str] = []
+                    if len(parts) >= 4 and parts[3]:
+                        prefs = [p.strip() for p in parts[3].split(',') if p.strip()]
+                    students[sid] = Student(sid, prefs, score)
+                continue
+            # Parse project tuple line: (P1, 2, 5)
+            if line.startswith('(') and ')' in line and ':' not in line:
+                content = line.strip()[1:line.rfind(')')]
+                fields = [p.strip() for p in content.split(',')]
+                if len(fields) >= 3:
+                    code = fields[0]
+                    vacancies = int(fields[1])
+                    min_req = int(fields[2])
+                    if vacancies < 1:
+                        raise ValueError(f"Project {code} must have at least 1 vacancy")
+                    projects[code] = Project(code, vacancies, min_req)
+                continue
+            # Parse student line: (A1):(P1, P30, P50) (5)
+            if ':' in line:
+                try:
+                    left, rest = line.split(':', 1)
+                    sid_str = left.strip()
+                    if sid_str.startswith('(') and sid_str.endswith(')'):
+                        sid_str = sid_str[1:-1]
+                    if sid_str.upper().startswith('A'):
+                        sid = int(sid_str[1:])
+                    else:
+                        sid = int(sid_str)
+                    # Extract prefs in parentheses
+                    prefs_part_start = rest.find('(')
+                    prefs_part_end = rest.find(')', prefs_part_start+1)
+                    prefs_list: List[str] = []
+                    if prefs_part_start != -1 and prefs_part_end != -1:
+                        prefs_str = rest[prefs_part_start+1:prefs_part_end]
+                        prefs_list = [p.strip() for p in prefs_str.split(',') if p.strip()]
+                    # Extract score: last parentheses
+                    score = None
+                    last_open = rest.rfind('(')
+                    last_close = rest.rfind(')')
+                    if last_open != -1 and last_close != -1 and last_close > last_open:
+                        score_str = rest[last_open+1:last_close].strip()
+                        score = int(score_str)
+                    if score is None or score not in (3,4,5):
+                        raise ValueError(f"Student {sid} score must be 3/4/5")
+                    students[sid] = Student(sid, prefs_list, score)
+                except Exception as e:
+                    raise ValueError(f"Invalid STUDENT line: {line}. Error: {e}")
+                continue
+            # Unknown format lines are ignored to be robust
+            
 
     # Validate that preferences refer to known projects; allow unknown but drop
     for s in students.values():

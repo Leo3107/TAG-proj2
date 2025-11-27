@@ -66,12 +66,16 @@ def student_satisfaction(matching: Dict[int, str], students: Dict[int, any]) -> 
 
 
 def project_satisfaction(projects: Dict[str, any]) -> float:
-    # average rank of allocated students (lower is better)
+    """Average rank of allocated students (lower is better). Treat unranked as worst+1 instead of huge sentinel."""
     ranks: List[int] = []
     for proj in projects.values():
         if proj.current_alloc:
+            worst_plus_one = len(proj.pref_list) + 1 if proj.pref_list else 1
             for sid in proj.current_alloc:
-                ranks.append(rank_in_project(proj, sid))
+                r = rank_in_project(proj, sid)
+                if r >= 10**8:  # sentinel for not present
+                    r = worst_plus_one
+                ranks.append(r)
     return (sum(ranks)/len(ranks)) if ranks else 0.0
 
 

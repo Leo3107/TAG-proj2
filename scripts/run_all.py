@@ -1,12 +1,17 @@
 import os
+import sys
 import pandas as pd
+
+# Ensure root path on sys.path
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if ROOT not in sys.path:
+    sys.path.append(ROOT)
+
 from src.parser import load_input
 from src.utils import build_project_prefs, rank_in_project, rank_in_student, is_stable, student_satisfaction, project_satisfaction, ensure_non_empty_projects
 from src.allocator import run_gale_shapley
 from src.visualizer import visualize_iteration
 
-BASE = os.path.dirname(os.path.abspath(__file__))
-ROOT = os.path.dirname(BASE)
 DATA = os.path.join(ROOT, 'data', 'entradaProj2.25TAG.txt')
 FIGS = os.path.join(ROOT, 'notebooks', 'figs')
 RESULTS = os.path.join(ROOT, 'results')
