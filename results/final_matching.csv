@@ -1,106 +1,59 @@
-student_id,project_id,project_rank_of_student,student_choice_rank
-1,P1,1,1
-2,P1,2,1
-6,P40,3,1
-7,P31,1000000000,2
-8,P6,1,1
-10,P43,1,2
-14,P15,2,3
-18,P8,2,1
-22,P18,5,1
-23,P9,2,1
-24,P10,4,1
-25,P50,1000000000,1
-26,P9,3,2
-27,P31,1000000000,2
-31,P12,1,1
-32,P2,2,1
-33,P3,1,1
-34,P4,2,1
-35,P5,1,1
-41,P14,2,1
-42,P16,1,1
-43,P14,3,2
-44,P15,4,3
-45,P11,1,1
-46,P43,2,1
-48,P26,1,1
-50,P10,5,3
-52,P20,7,2
-53,P45,2,3
-55,P35,1,1
-56,P36,1,1
-58,P47,2,2
-60,P3,2,1
-61,P37,1,1
-62,P38,1,1
-63,P39,1,1
-64,P30,4,1
-67,P31,1000000000,1
-68,P36,2,1
-69,P29,3,2
-71,P31,1000000000,3
-73,P33,1000000000,1
-81,P27,4,1
-82,P27,5,2
-83,P27,6,1
-84,P40,2,2
-85,P5,4,1
-91,P24,4,1
-93,P26,2,1
-94,P45,4,3
-96,P43,4,1
-100,P20,3,3
-102,P10,1000000000,1
-103,P33,1000000000,3
-104,P13,1000000000,2
-107,P41,1,1
-110,P33,1000000000,2
-111,P34,5,2
-116,P46,1000000000,1
-117,P7,1,1
-119,P49,1000000000,3
-123,P49,1000000000,1
-127,P28,2,1
-129,P29,4,2
-134,P25,4,3
-135,P15,6,1
-136,P46,1000000000,1
-137,P21,2,2
-139,P9,1000000000,1
-144,P22,1,1
-145,P21,8,1
-146,P23,1000000000,1
-148,P6,1000000000,1
-150,P48,1000000000,1
-151,P42,1000000000,1
-152,P42,1000000000,1
-154,P44,1000000000,1
-155,P45,6,1
-156,P46,1000000000,1
-157,P18,2,3
-159,P19,1000000000,2
-161,P17,3,2
-167,P31,1000000000,1
-171,P32,1000000000,1
-172,P32,1000000000,1
-173,P33,1000000000,1
-174,P34,7,1
-176,P19,1000000000,2
-177,P18,3,3
-178,P18,1000000000,1
-179,P19,1000000000,1
-182,P44,1000000000,3
-185,P48,1000000000,2
-186,P27,1000000000,1
-187,P7,2,1
-188,P8,5,1
-189,P19,1000000000,1
-190,P10,1000000000,1
-192,P48,1000000000,3
-195,P23,1000000000,2
-196,P31,1000000000,3
-197,P41,2,1
-198,P50,1000000000,2
-199,P13,1000000000,1
-200,P10,1,2
+Aluno,Projeto Emparelhado,Rank do Aluno (Lista do Projeto),Rank do Projeto (Lista do Aluno)
+A1,P32,N/A,Não listado
+A2,P1,2º (de 5 elegíveis),1ª escolha
+A6,P9,1º (de 8 elegíveis),2ª escolha
+A8,P6,1º (de 1 elegíveis),1ª escolha
+A10,P43,1º (de 9 elegíveis),2ª escolha
+A14,P15,2º (de 9 elegíveis),3ª escolha
+A18,P33,N/A,Não listado
+A23,P9,2º (de 8 elegíveis),1ª escolha
+A24,P10,4º (de 10 elegíveis),1ª escolha
+A25,P34,3º (de 9 elegíveis),3ª escolha
+A26,P15,3º (de 9 elegíveis),3ª escolha
+A31,P12,1º (de 8 elegíveis),1ª escolha
+A32,P2,2º (de 3 elegíveis),1ª escolha
+A33,P42,N/A,Não listado
+A34,P4,2º (de 3 elegíveis),1ª escolha
+A35,P44,N/A,Não listado
+A41,P14,2º (de 7 elegíveis),1ª escolha
+A42,P16,1º (de 1 elegíveis),1ª escolha
+A43,P14,3º (de 7 elegíveis),2ª escolha
+A45,P11,1º (de 5 elegíveis),1ª escolha
+A46,P43,2º (de 9 elegíveis),1ª escolha
+A48,P26,1º (de 6 elegíveis),1ª escolha
+A50,P10,5º (de 10 elegíveis),3ª escolha
+A53,P45,2º (de 7 elegíveis),3ª escolha
+A55,P35,1º (de 3 elegíveis),1ª escolha
+A56,P36,1º (de 5 elegíveis),1ª escolha
+A58,P47,2º (de 5 elegíveis),2ª escolha
+A60,P3,2º (de 9 elegíveis),1ª escolha
+A61,P37,1º (de 14 elegíveis),1ª escolha
+A62,P38,1º (de 5 elegíveis),1ª escolha
+A63,P39,1º (de 9 elegíveis),1ª escolha
+A64,P30,4º (de 15 elegíveis),1ª escolha
+A68,P36,2º (de 5 elegíveis),1ª escolha
+A69,P29,3º (de 7 elegíveis),2ª escolha
+A73,P45,3º (de 7 elegíveis),3ª escolha
+A81,P46,N/A,Não listado
+A82,P19,N/A,Não listado
+A83,P27,6º (de 7 elegíveis),1ª escolha
+A84,P40,2º (de 14 elegíveis),2ª escolha
+A85,P5,4º (de 11 elegíveis),1ª escolha
+A91,P24,4º (de 11 elegíveis),1ª escolha
+A93,P26,2º (de 6 elegíveis),1ª escolha
+A100,P20,3º (de 15 elegíveis),3ª escolha
+A104,P25,3º (de 5 elegíveis),3ª escolha
+A107,P41,1º (de 6 elegíveis),1ª escolha
+A117,P48,N/A,Não listado
+A127,P28,2º (de 14 elegíveis),1ª escolha
+A129,P29,4º (de 7 elegíveis),2ª escolha
+A137,P21,2º (de 10 elegíveis),2ª escolha
+A144,P22,1º (de 2 elegíveis),1ª escolha
+A157,P13,N/A,Não listado
+A159,P49,1º (de 2 elegíveis),3ª escolha
+A161,P17,3º (de 6 elegíveis),2ª escolha
+A177,P18,3º (de 9 elegíveis),3ª escolha
+A187,P7,2º (de 2 elegíveis),1ª escolha
+A188,P8,5º (de 5 elegíveis),1ª escolha
+A197,P23,1º (de 1 elegíveis),2ª escolha
+A200,P31,N/A,Não listado

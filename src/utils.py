@@ -37,10 +37,13 @@ def is_stable(matching: Dict[int, str], projects: Dict[str, any], students: Dict
             proj = projects.get(proj_code)
             if not proj:
                 continue
+            # Check if student qualifies for this project
+            if student.score < proj.min_req:
+                continue  # Student doesn't qualify, can't form blocking pair
             # Would the project prefer this student over its worst currently allocated?
             alloc = proj.current_alloc
             if len(alloc) < proj.vacancies:
-                return False  # blocking pair (project has vacancy and student prefers it)
+                return False  # blocking pair (project has vacancy and student prefers it and qualifies)
             worst = max(alloc, key=lambda s: rank_in_project(proj, s))
             if rank_in_project(proj, sid) < rank_in_project(proj, worst):
                 return False
@@ -79,27 +82,57 @@ def project_satisfaction(projects: Dict[str, any]) -> float:
     return (sum(ranks)/len(ranks)) if ranks else 0.0
 
 
-def ensure_non_empty_projects(projects: Dict[str, any], students: Dict[int, any], matching: Dict[int, str]) -> None:
-    """Post-process: if any project is empty, reassign an eligible student with minimal loss."""
+def ensure_non_empty_projects(projects: Dict[str, any], students: Dict[int, any], matching: Dict[int, str]) -> int:
+    """
+    Post-process: tenta garantir que cada projeto tenha pelo menos 1 aluno.
+    
+    Estratégia:
+    1. Para projetos vazios, primeiro tenta alocar alunos não-emparelhados que qualificam
+    2. Se não houver, tenta realocar alunos de projetos com mais de 1 aluno
+    3. Se o aluno não qualifica (score < min_req), o projeto permanece vazio
+    
+    Returns:
+        Número de projetos que permaneceram vazios (não foi possível preencher)
+    """
     empty = [p for p in projects.values() if not p.current_alloc]
+    still_empty = 0
+    
     for proj in empty:
         # Find eligible unmatched students first
         candidates = [s for s in students.values() if s.score >= proj.min_req and matching.get(s.id) is None]
+        
         if not candidates:
-            # Consider matched students where moving causes minimal increase in rank_in_student
-            candidates = [s for s in students.values() if s.score >= proj.min_req]
-        # Sort by loss: rank in proj + delta from current choice rank
+            # Try to find students from projects with more than minimum allocation
+            # Only consider students who qualify for this project
+            for other_proj in projects.values():
+                if len(other_proj.current_alloc) > 1:  # Has more than 1 student
+                    for sid in other_proj.current_alloc:
+                        student = students[sid]
+                        if student.score >= proj.min_req:
+                            candidates.append(student)
+        
+        if not candidates:
+            # No eligible students available - project must stay empty
+            still_empty += 1
+            continue
+            
+        # Sort by: prefer unmatched, then by loss (difference in preference rank)
         def loss(s):
             current = matching.get(s.id)
             current_rank = rank_in_student(s, current) if current else 10**9
-            return rank_in_student(s, proj.code) - current_rank
-        candidates.sort(key=lambda s: (loss(s), s.id))
-        if candidates:
-            chosen = candidates[0]
-            prev_proj_code = matching.get(chosen.id)
-            if prev_proj_code:
-                prev_proj = projects[prev_proj_code]
-                if chosen.id in prev_proj.current_alloc:
-                    prev_proj.current_alloc.remove(chosen.id)
-            proj.current_alloc.append(chosen.id)
-            matching[chosen.id] = proj.code
+            new_rank = rank_in_student(s, proj.code)
+            is_matched = 0 if current is None else 1
+            return (is_matched, new_rank - current_rank, s.id)
+        
+        candidates.sort(key=loss)
+        
+        chosen = candidates[0]
+        prev_proj_code = matching.get(chosen.id)
+        if prev_proj_code:
+            prev_proj = projects[prev_proj_code]
+            if chosen.id in prev_proj.current_alloc:
+                prev_proj.current_alloc.remove(chosen.id)
+        proj.current_alloc.append(chosen.id)
+        matching[chosen.id] = proj.code
+    
+    return still_empty
