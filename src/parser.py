@@ -18,13 +18,7 @@ class Student:
 
 
 def load_input(path: str) -> Tuple[Dict[str, Project], Dict[int, Student]]:
-    """
-    Load and validate input from a TXT file with a simple JSON-like format or CSV-like.
-    Expected keys: projects and students blocks.
-    Robustly parse lines of the form:
-      PROJECT;code;vacancies;min_req
-      STUDENT;id;score;prefs(comma-separated project codes)
-    """
+    """Carrega arquivo de entrada com projetos e alunos."""
     projects: Dict[str, Project] = {}
     students: Dict[int, Student] = {}
 
@@ -101,10 +95,7 @@ def load_input(path: str) -> Tuple[Dict[str, Project], Dict[int, Student]]:
                 except Exception as e:
                     raise ValueError(f"Invalid STUDENT line: {line}. Error: {e}")
                 continue
-            # Unknown format lines are ignored to be robust
-            
 
-    # Validate that preferences refer to known projects; allow unknown but drop
     for s in students.values():
         s.prefs = [p for p in s.prefs if p in projects]
 
